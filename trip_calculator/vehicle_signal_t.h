@@ -1,3 +1,6 @@
+#ifndef VEHICLE_SIGNAL_T_H
+#define VEHICLE_SIGNAL_T_H
+
 #include <stdint.h>
 typedef enum {
     VEHICLE_SIGNAL_TYPE_VEHICLE_SPEED,		// unsigned vehicle speed in kilometers per hour
@@ -11,3 +14,5 @@ typedef struct {
     uint64_t unix_timestamp_milliseconds;
     float value;
 }vehicle_signal_t;
+
+#endif

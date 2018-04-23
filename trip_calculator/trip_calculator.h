@@ -1,3 +1,6 @@
+#ifndef TRIP_CALCULATOR_H
+#define TRIP_CALCULATOR_H
+
 #include <stdint.h>
 #include "vehicle_signal_t.h"
 #include "numerical_integration.h"
@@ -25,3 +28,5 @@ void update_start_battery_level(float battery_level);
 void update_end_battery_level(float battery_level);
 
 trip_event_summary_t get_trip_event_summary();
+
+#endif
