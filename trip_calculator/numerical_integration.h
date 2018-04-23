@@ -1,0 +1,1 @@
+float integrate(float lower_bound, float upper_bound, int num_of_points, float value, float (*function)(float y, float x));
