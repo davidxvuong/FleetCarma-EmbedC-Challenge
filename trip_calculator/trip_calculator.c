@@ -1,38 +1,108 @@
 #include "trip_calculator.h"
 
-float energy_function(float vehicle_power, float x) {
-	//TODO: define power function. Note that power = battery voltage * battery current
-
+//These two functions are simply used as the functions to be integrated via the trapezoidal rule. We are treating the integration as a black box despite having the implementation for it. This allows the numerical integration methods to be reused elsewhere if needed.
+float power_function(float vehicle_power, float x) {
+	//Note that power = battery voltage * battery current
+	return vehicle_power;
 }
 
-float distance_function(float vehicle_speed, float x) {
+float speed_function(float vehicle_speed, float x) {
 	//TODO: define distance function
+	return vehicle_speed;
+}
+
+void initialize() {
+	trip_data.start_time_since_unix_epoch_seconds = 0;
+	trip_data.duration_seconds = 0;
+	trip_data.distance_dravelled_meters = 0;
+	trip_data.total_energy_consumed_wh = 0;
+	trip_data.starting_soc = 0.0f;
+	trip_data.ending_soc = 0.0f;
+
+	is_travelling = false;
+	received_first_bat_soc_signal = false;
+	received_voltage = false;
+	received_current = false;
+	prev_signal_time_seconds = 0;
 }
 
 void process_vehicle_signal(vehicle_signal_t signal) {
-	//TODO: determine what kind of signal it is, then call the appropriate update functions necessary
+
+	uint32_t current_unix_timestamp_seconds;
+	current_unix_timestamp_seconds = signal.unix_timestamp_milliseconds / 1000;
+
+	update_time_and_duration(current_unix_timestamp_seconds);
+
+	//determine appropriate type of signal, then call the corresponding update function as needed
+	switch (signal.signal_type) {
+
+		case VEHICLE_SIGNAL_TYPE_VEHICLE_SPEED:
+
+			update_distance(prev_signal_time_seconds, current_unix_timestamp_seconds, signal.value);
+			break;
+
+		case VEHICLE_SIGNAL_TYPE_HV_BATTERY_VOLTAGE:
+
+			voltage = signal.value;
+			received_voltage = true;
+			break;
+
+		case VEHICLE_SIGNAL_TYPE_HV_BATTERY_CURRENT:
+
+			current = signal.value;
+			received_current = true;
+			break;
+
+		case VEHICLE_SIGNAL_TYPE_HV_BATTERY_SOC:
+
+			update_battery_soc_level(signal.value);
+			break;
+	}
+
+	if (recieved_voltage && received_current) {
+		received_current = false;
+		recieved_voltage = false;
+
+		update_net_energy(voltage * current);
+	}
+
 }
 
-void update_start_time(float time) {
+void update_time_and_duration(uint32_t time) {
+	//update duration and start time (if vehicle has not started moving yet)
+
+	if (!is_travelling) {
+		//vehicle hasn't moved before, but we got a vehicle signal, so it is now
+		is_travelling = true;
+		prev_signal_time_seconds = 0;
+
+		trip_data.start_time_since_unix_epoch_seconds = time;
+	}
+	else {
+		//vehicle is in motion, so determine the duration travelled thus far
+		trip_data.duration_seconds = time - trip_data.start_time_since_unix_epoch_seconds;
+		prev_signal_time_seconds = time;
+	}
+}
+
+void update_distance(float speed, uint32_t start_time, uint32_t final_time) {
 
 }
 
-void update_duration(float time) {
-
+void update_net_energy(float power, uint32_t start_time, uint32_t final_time) {
+	
 }
 
-void update_distance(float distance) {
+void update_battery_soc_level(float battery_level) {
 
-}
+	if (!received_first_bat_soc_signal) {
+		received_first_bat_soc_signal = true;
+		trip_data.starting_soc = battery_level;
+	}
 
-void update_start_battery_level(float battery_level) {
-
-}
-
-void update_end_battery_level(float battery_level) {
-
+	trip_data.ending_soc = battery_level;
 }
 
 trip_event_summary_t get_trip_event_summary() {
-	
+	return trip_data;
 }
