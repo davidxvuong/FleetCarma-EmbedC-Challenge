@@ -2,11 +2,13 @@
 #define TRIP_CALCULATOR_H
 
 #include <stdint.h>
+#include <stdbool.h>
 #include "vehicle_signal_t.h"
 #include "numerical_integration.h"
 
 //Determines how to slice up the area under the curve
 #define NUM_POINTS 10
+#define KM_H_TO_M_S_CONV_FACTOR (50.0/3.0)
 
 typedef struct {
     uint32_t start_time_since_unix_epoch_seconds;
@@ -32,11 +34,11 @@ float current;
 float power_function(float vehicle_power, float x);
 float speed_function(float vehicle_speed, float x);
 
-void initialize();
+void initialize_trip_event_summary();
 void process_vehicle_signal(vehicle_signal_t signal);
 void update_time_and_duration(uint32_t time);
-void update_distance(float speed, uint32_t start_time, uint32_t final_time);
-void update_net_energy(float power, uint32_t start_time, uint32_t final_time);
+void update_distance(uint32_t start_time, uint32_t final_time, float speed);
+void update_net_energy(uint32_t start_time, uint32_t final_time, float power);
 void update_battery_soc_level(float battery_level);
 
 trip_event_summary_t get_trip_event_summary();

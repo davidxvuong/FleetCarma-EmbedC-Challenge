@@ -2,7 +2,7 @@
 
 //Using trapezoidal rule: http://web2.uwindsor.ca/courses/engineering/ahmed/PDF%20FILES%20FOR%20C++/Chapter%20X%20C++.pdf
 //For the purposes of this program, the we only need one coefficient. If we needed more, the coefficient will be modified to be a array of coefficients
-float integrate(float lower_bound, float upper_bound, int num_of_points, float constant, float (*function)(float coefficient, float x)) {
+float integrate(uint32_t lower_bound, uint32_t upper_bound, int num_of_points, float constant, float (*function)(float coefficient, float x)) {
 	float area;
 	float dx;
 	float x;

@@ -11,10 +11,10 @@ float speed_function(float vehicle_speed, float x) {
 	return vehicle_speed;
 }
 
-void initialize() {
+void initialize_trip_event_summary() {
 	trip_data.start_time_since_unix_epoch_seconds = 0;
 	trip_data.duration_seconds = 0;
-	trip_data.distance_dravelled_meters = 0;
+	trip_data.distance_travelled_meters = 0;
 	trip_data.total_energy_consumed_wh = 0;
 	trip_data.starting_soc = 0.0f;
 	trip_data.ending_soc = 0.0f;
@@ -59,9 +59,9 @@ void process_vehicle_signal(vehicle_signal_t signal) {
 			break;
 	}
 
-	if (recieved_voltage && received_current) {
+	if (received_voltage && received_current) {
 		received_current = false;
-		recieved_voltage = false;
+		received_voltage = false;
 
 		update_net_energy(prev_signal_time_seconds, current_unix_timestamp_seconds, voltage * current);
 	}
@@ -85,12 +85,26 @@ void update_time_and_duration(uint32_t time) {
 	}
 }
 
-void update_distance(float speed, uint32_t start_time, uint32_t final_time) {
-	//TODO: call integrate function
+void update_distance(uint32_t start_time, uint32_t final_time, float speed) {
+	float converted_speed;
+	float result;
+
+	//convert speed from km/h to m/s
+	converted_speed = KM_H_TO_M_S_CONV_FACTOR * speed;
+
+	result = integrate(start_time, final_time, NUM_POINTS, speed, &speed_function);
+
+	trip_data.distance_travelled_meters += result;
 }
 
-void update_net_energy(float power, uint32_t start_time, uint32_t final_time) {
+void update_net_energy(uint32_t start_time, uint32_t final_time, float power) {
 	//TODO: call integrate function
+
+	float result;
+
+	result = integrate(start_time, final_time, NUM_POINTS, power, &power_function);
+
+	trip_data.total_energy_consumed_wh += result;
 }
 
 void update_battery_soc_level(float battery_level) {
