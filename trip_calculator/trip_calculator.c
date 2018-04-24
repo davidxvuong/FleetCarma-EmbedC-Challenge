@@ -63,7 +63,7 @@ void process_vehicle_signal(vehicle_signal_t signal) {
 		received_current = false;
 		recieved_voltage = false;
 
-		update_net_energy(voltage * current);
+		update_net_energy(prev_signal_time_seconds, current_unix_timestamp_seconds, voltage * current);
 	}
 
 }
@@ -86,11 +86,11 @@ void update_time_and_duration(uint32_t time) {
 }
 
 void update_distance(float speed, uint32_t start_time, uint32_t final_time) {
-
+	//TODO: call integrate function
 }
 
 void update_net_energy(float power, uint32_t start_time, uint32_t final_time) {
-	
+	//TODO: call integrate function
 }
 
 void update_battery_soc_level(float battery_level) {
