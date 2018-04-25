@@ -78,10 +78,10 @@ int main()
 			}
 
 			if (count != TIMESTAMP) {
-					signal.unix_timestamp_milliseconds = unix_time_ms;
-					signal.value = atof(token);
+				signal.unix_timestamp_milliseconds = unix_time_ms;
+				signal.value = atof(token);
 
-					process_vehicle_signal(signal);
+				process_vehicle_signal(signal);
 			}
 
 			++count;
