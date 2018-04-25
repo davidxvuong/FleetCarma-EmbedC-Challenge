@@ -7,7 +7,7 @@
 #include "numerical_integration.h"
 
 //Determines how to slice up the area under the curve
-#define NUM_POINTS 10
+#define NUM_POINTS 1
 #define KM_H_TO_M_S_CONV_FACTOR (50.0/3.0)
 
 typedef struct {
@@ -23,6 +23,7 @@ trip_event_summary_t trip_data;
 
 //control/intermediate data variables for trip event summary
 bool is_travelling;
+bool no_prior_data;
 bool received_first_bat_soc_signal;
 bool received_voltage;
 bool received_current;

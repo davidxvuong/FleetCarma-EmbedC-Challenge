@@ -23,22 +23,29 @@ void initialize_trip_event_summary() {
 	received_first_bat_soc_signal = false;
 	received_voltage = false;
 	received_current = false;
+	no_prior_data = false;
 	prev_signal_time_seconds = 0;
 }
 
 void process_vehicle_signal(vehicle_signal_t signal) {
-
+	uint32_t prev_time_relative;
+	uint32_t current_time_relative;
 	uint32_t current_unix_timestamp_seconds;
+
 	current_unix_timestamp_seconds = signal.unix_timestamp_milliseconds / 1000;
 
 	update_time_and_duration(current_unix_timestamp_seconds);
+
+	prev_time_relative = prev_signal_time_seconds - trip_data.start_time_since_unix_epoch_seconds;
+	current_time_relative = current_unix_timestamp_seconds - trip_data.start_time_since_unix_epoch_seconds;
 
 	//determine appropriate type of signal, then call the corresponding update function as needed
 	switch (signal.signal_type) {
 
 		case VEHICLE_SIGNAL_TYPE_VEHICLE_SPEED:
 
-			update_distance(prev_signal_time_seconds, current_unix_timestamp_seconds, signal.value);
+			if (!no_prior_data)
+				update_distance(prev_time_relative, current_time_relative, signal.value);
 			break;
 
 		case VEHICLE_SIGNAL_TYPE_HV_BATTERY_VOLTAGE:
@@ -59,29 +66,38 @@ void process_vehicle_signal(vehicle_signal_t signal) {
 			break;
 	}
 
-	if (received_voltage && received_current) {
+	if (received_voltage && received_current && !no_prior_data) {
 		received_current = false;
 		received_voltage = false;
 
-		update_net_energy(prev_signal_time_seconds, current_unix_timestamp_seconds, voltage * current);
+		update_net_energy(prev_time_relative, current_time_relative, voltage * current);
 	}
 
 }
 
 void update_time_and_duration(uint32_t time) {
 	//update duration and start time (if vehicle has not started moving yet)
+	uint32_t time_diff;
 
 	if (!is_travelling) {
 		//vehicle hasn't moved before, but we got a vehicle signal, so it is now
 		is_travelling = true;
-		prev_signal_time_seconds = 0;
-
+		no_prior_data = true;
+		prev_signal_time_seconds = time;
 		trip_data.start_time_since_unix_epoch_seconds = time;
 	}
 	else {
 		//vehicle is in motion, so determine the duration travelled thus far
 		trip_data.duration_seconds = time - trip_data.start_time_since_unix_epoch_seconds;
-		prev_signal_time_seconds = time;
+
+		time_diff = time - prev_signal_time_seconds;
+
+		if (time_diff == 2) {
+			++prev_signal_time_seconds;
+		}
+		else if (time_diff == 1) {
+			no_prior_data = false;
+		}
 	}
 }
 
