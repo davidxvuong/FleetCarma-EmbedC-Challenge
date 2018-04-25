@@ -26,6 +26,7 @@ int main()
 	vehicle_signal_t signal;
 	int count;
 	uint64_t unix_time_ms;
+	trip_event_summary_t trip_summary;
 
 	ptr_file = fopen("demo_trip_data.csv", "r");
 
@@ -61,38 +62,46 @@ int main()
 				case HV_BAT_VOLTAGE:
 
 					signal.signal_type = VEHICLE_SIGNAL_TYPE_HV_BATTERY_VOLTAGE;
-					signal.unix_timestamp_milliseconds = unix_time_ms;
-					signal.value = atof(token);
 					break;
 				case HV_BAT_CURRENT:
 
 					signal.signal_type = VEHICLE_SIGNAL_TYPE_HV_BATTERY_CURRENT;
-					signal.unix_timestamp_milliseconds = unix_time_ms;
-					signal.value = atof(token);
 					break;
 				case HV_BAT_SOC:
 
 					signal.signal_type = VEHICLE_SIGNAL_TYPE_HV_BATTERY_SOC;
-					signal.unix_timestamp_milliseconds = unix_time_ms;
-					signal.value = atof(token);
 					break;
 				case VEHICLE_SPEED:
 
 					signal.signal_type = VEHICLE_SIGNAL_TYPE_VEHICLE_SPEED;
+					break;
+			}
+
+			if (count != TIMESTAMP) {
 					signal.unix_timestamp_milliseconds = unix_time_ms;
 					signal.value = atof(token);
-					printf("%f", signal.value);
-					break;
+
+					process_vehicle_signal(signal);
 			}
 
 			++count;
 			token = strtok(NULL, ",");
 		}
-		printf("\n");
 	}
 
 	fclose(ptr_file);
-   	printf("Done\n");
+
+   	printf("Done. Trip event summary shown below:\n");
+
+	trip_summary = get_trip_event_summary();
+
+	printf("Start time: %u\n", trip_summary.start_time_since_unix_epoch_seconds);
+	printf("Duration: %u\n", trip_summary.duration_seconds);
+	printf("Total distance travelled: %u\n", trip_summary.distance_travelled_meters);
+	printf("Total energy consumed: %u\n", trip_summary.total_energy_consumed_wh);
+	printf("Starting Battery State of CHarge: %f\n", trip_summary.starting_soc);
+	printf("Ending Battery State of Charge: %f\n", trip_summary.ending_soc);
+
 
 
     return 0;
