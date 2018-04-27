@@ -46,11 +46,11 @@ Recall that the formula for determining speed is the derivative of distance with
 Reversing these derivatives will create the formula for distance and energy. The formula for distance is the integral of speed with respect to time, and the formula for energy is the integral of pwoer with respect to time.
 
 <p align=center>
-	<img src="https://latex.codecogs.com/gif.latex?W=\int&space;Pdt" title="W=\int Pdt" />
+	<img src="https://latex.codecogs.com/gif.latex?d=\int&space;vdt" title="d=\int vdt" />
 </p>
 <br>
 <p align=center>
-	<img src="https://latex.codecogs.com/gif.latex?d=\int&space;vdt" title="d=\int vdt" />
+	<img src="https://latex.codecogs.com/gif.latex?W=\int&space;Pdt" title="W=\int Pdt" />
 </p>
 
 Our C code will need to perform integration in order to get the values we need. According to the coding challenge, it doesn't matter which integration method we use. So I figured that the simplest was to use the [trapezoidal rule](http://tutorial.math.lamar.edu/Classes/CalcII/ApproximatingDefIntegrals.aspx). This states that the integral of any function can be approximated by the area of several smaller regions approximated by a trapezoid, where the slant of the trapezoid represents the curve on the function to be integrated. 
