@@ -31,11 +31,27 @@ For more information, feel free to visit the [FleetCarma's EmbedC Challenge](htt
 
 ##Highlights of Implementation
 
-Part of the challenge was to determine the vehicle's distance travelled and the net energy consumed by the vehicle. As a disclaimer, I am not that good at physics, but I still remember some key parts taught in my 1st year physics courses (specifically, [ECE 105](https://uwflow.com/course/ece105) and [ECE 106](https://uwflow.com/course/ece106)).
+Part of the challenge was to determine the vehicle's distance travelled and the net energy consumed by the vehicle. As a disclaimer, I am not that good at physics, but I still remember some key parts taught in my 1st year physics and calculus courses (specifically, [MATH 117](https://uwflow.com/course/math117) [ECE 105](https://uwflow.com/course/ece105) and [ECE 106](https://uwflow.com/course/ece106)).
 
-Recall that the formula for determining speed is the infinitesimal distance divided by the infinitesimal time, or:
+Recall that the formula for determining speed is the derivative of distance with respect to time, and and the formula for determining the power is the derivative of energy with respect to time.
 
 <p align=center>
-	<img src="https://latex.codecogs.com/gif.latex?v=\frac{\mathrm{d}&space;s}{\mathrm{d}&space;x}" title="v=\frac{\mathrm{d} s}{\mathrm{d} x}" />
+	<img src="https://latex.codecogs.com/gif.latex?v=\frac{\mathrm{d}&space;s}{\mathrm{d}&space;t}" title="v=\frac{\mathrm{d} s}{\mathrm{d} t}" />
+</p>
+
+
+
+<p align=center>
+	<img src="https://latex.codecogs.com/gif.latex?P=\frac{\mathrm{d}&space;W}{\mathrm{d}&space;t}" title="P=\frac{\mathrm{d} W}{\mathrm{d} t}" />
+</p>
+
+Reversing these derivatives will create the formula for distance and energy. The formula for distance is the integral of speed with respect to time, and the formula for energy is the integral of pwoer with respect to time.
+
+<p align=center>
+	<img src="https://latex.codecogs.com/gif.latex?W=\int&space;Pdt" title="W=\int Pdt" />
+</p>
+
+<p align=center>
+	<img src="https://latex.codecogs.com/gif.latex?d=\int&space;vdt" title="d=\int vdt" />
 </p>
 
