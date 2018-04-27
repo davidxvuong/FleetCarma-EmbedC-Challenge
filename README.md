@@ -35,4 +35,7 @@ Part of the challenge was to determine the vehicle's distance travelled and the 
 
 Recall that the formula for determining speed is the infinitesimal distance divided by the infinitesimal time, or:
 
-<a href="https://www.codecogs.com/eqnedit.php?latex=v=\frac{\mathrm{d}&space;s}{\mathrm{d}&space;x}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?v=\frac{\mathrm{d}&space;s}{\mathrm{d}&space;x}" title="v=\frac{\mathrm{d} s}{\mathrm{d} x}" /></a>
+<p align=center>
+	<img src="https://latex.codecogs.com/gif.latex?v=\frac{\mathrm{d}&space;s}{\mathrm{d}&space;x}" title="v=\frac{\mathrm{d} s}{\mathrm{d} x}" />
+</p>
+
